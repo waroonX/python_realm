@@ -28,41 +28,15 @@ Constraints:
 
 from typing import List
 
-class Stack:
-    def __init__(self):
-        self.container = []
-        self.length = 0
-
-    def push(self, value):
-        self.length += 1
-        self.container.append(value)
-
-    def pop(self):
-        if not self.is_empty():
-            self.length -= 1
-            return self.container.pop()
-
-    def peek(self):
-        return self.container[-1] if self.container else None
-
-    def is_empty(self):
-        return self.length == 0
-
-    def size(self):
-        return self.length
-
 def dailyTemperatures(temperatures: List[int]) -> List[int]:
-    peak_stack = Stack()
+    stack = []
     n = len(temperatures)
-    ans_list = [0]*n
+    res = [0]*n
     for i, num in enumerate(temperatures):
-        if not peak_stack.is_empty():
-            val = peak_stack.peek()
-            while ((not peak_stack.is_empty()) and (num > temperatures[val])):
-                val = peak_stack.pop()
-                ans_list[val] = i - val
-                val = peak_stack.peek()
-        peak_stack.push(i)
-    return ans_list
+        while stack and (num > temperatures[stack[-1]]):
+            prev_val = stack.pop()
+            res[prev_val] = i - prev_val
+        stack.append(i)
+    return res
 
 print(dailyTemperatures([73,74,75,71,69,72,76,73]))
